@@ -5,6 +5,10 @@ type Props = {
 };
 
 const keys = [
+  { text: '^', isOperatorKey: true },
+  { text: 'L', isOperatorKey: true },
+  { text: 'LN', isOperatorKey: true },
+  { text: '√', isOperatorKey: true },
   { text: '+', isOperatorKey: true },
   { text: '1' },
   { text: '2' },
@@ -37,7 +41,7 @@ export default function CalculatorKeyboard({ keyboardClickHandler }: Props) {
   ));
 
   return (
-    <div className='calculatorKeyboardBox grow grid grid-cols-4 grid-rows-4 gap-4 p-3'>
+    <div className='calculatorKeyboardBox gap-4 grid grid-cols-4 grid-rows-4 grow p-3'>
       {keyItems}
     </div>
   );

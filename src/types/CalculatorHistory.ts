@@ -3,7 +3,6 @@ import { CalculationToken } from '@/types/CalculationTokens';
 export type CalculatorHistoryResult = {
   isDisplayed: boolean;
   rawInput: string;
-  calculationTokens: CalculationToken[];
   result: number;
 };
 

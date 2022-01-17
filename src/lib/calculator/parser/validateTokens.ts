@@ -1,4 +1,4 @@
-import { operators } from '@/lib/calculator/operators';
+import { irrationalOperators, operators } from '@/lib/calculator/operators';
 import { isRationalNumberExpression } from '@/lib/helper';
 import {
   CalculationToken,
@@ -13,54 +13,45 @@ type validateTokenFunction = {
   [name: string]: (token: any) => boolean;
 };
 
-const validateInnerTokenListToken = (token: InnerTokenListToken): boolean => {
+export const validateInnerTokenListToken = (
+  rawTokenString: string
+): boolean => {
   const [stringStart, stringEnd]: [string, string] = [
-    token.rawTokenString.slice(0, 1),
-    token.rawTokenString.slice(-1),
+    rawTokenString.slice(0, 1),
+    rawTokenString.slice(-1),
   ];
   if (stringStart !== `(`) {
-    throw `missing opening parenthesis: ${token.rawTokenString}`;
+    throw `missing opening parenthesis`;
   } else if (stringEnd !== `)`) {
-    throw `missing closing parenthesis: ${token.rawTokenString}`;
+    throw `missing closing parenthesis`;
   }
   return true;
 };
 
-const validateIrrationalNumberToken = (
-  token: IrrationalNumberToken
+export const validateIrrationalNumberToken = (
+  rawTokenString: string,
+  valueString: string
 ): boolean => {
-  const numberExpression: string = token.rawTokenString.slice(
-    token.irrationalOperator.length
-  );
-  if (!isRationalNumberExpression(numberExpression)) {
-    throw `invalid expression: ${token.rawTokenString}`;
+  if (!isRationalNumberExpression(valueString)) {
+    throw `invalid expression: ${rawTokenString}`;
   }
   return true;
 };
 
-const validateRationalNumberToken = (token: RationalNumberToken): boolean => {
-  if (!isRationalNumberExpression(token.rawTokenString)) {
-    throw `invalid expression: ${token.rawTokenString}`;
+export const validateRationalNumberToken = (
+  rawTokenString: string
+): boolean => {
+  if (!isRationalNumberExpression(rawTokenString)) {
+    throw `invalid number: ${rawTokenString}`;
   }
   return true;
 };
 
-const validateOperatorToken = (token: OperatorToken): boolean => {
-  if (!Object.keys(operators).includes(token.rawTokenString)) {
-    throw `invalid expression: ${token.rawTokenString}`;
+export const validateOperatorToken = (rawTokenString: string): boolean => {
+  if (!Object.keys(operators).includes(rawTokenString)) {
+    throw `invalid operator: ${rawTokenString}`;
   }
   return true;
-};
-
-const validateTokenFuncions: validateTokenFunction = {
-  innerTokenList: validateInnerTokenListToken,
-  irrationalNumber: validateIrrationalNumberToken,
-  rationalNumber: validateRationalNumberToken,
-  operator: validateOperatorToken,
-};
-
-export const validateToken = (token: CalculationToken): boolean => {
-  return validateTokenFuncions[token.tokenType](token);
 };
 
 export const tokensAreOrdered = (tokenList: CalculationToken[]): boolean => {

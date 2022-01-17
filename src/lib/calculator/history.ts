@@ -9,8 +9,9 @@ export const addHistoryItem = (
   newItem: CalculatorHistoryResult | CalculatorHistoryError
 ) => {
   history.items.push({ ...newItem });
-  return changedDisplayedItems(history, history.displayedItemsCount, 0);
-};
+  return history;
+  // return changedDisplayedItems(history, history.displayedItemsCount, 0);
+};;
 
 export const changedDisplayedItems = (
   history: CalculatorHistory,

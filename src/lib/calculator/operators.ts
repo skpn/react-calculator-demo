@@ -22,6 +22,10 @@ export const operators: operator = {
     priority: 2,
     func: (a, b) => a / b,
   },
+  '^': {
+    priority: 3,
+    func: (a, b) => a ** b,
+  },
 };
 
 type irrationalOperator = {
@@ -30,6 +34,6 @@ type irrationalOperator = {
 
 export const irrationalOperators: irrationalOperator = {
   '√': (a) => Math.sqrt(a),
-  L: (a) => Math.log10(a),
   LN: (a) => Math.log(a),
+  L: (a) => Math.log10(a),
 };

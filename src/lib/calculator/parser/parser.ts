@@ -1,7 +1,12 @@
 import { CalculationToken } from '@/types/CalculationTokens';
 import { irrationalOperators, operators } from '@/lib/calculator/operators';
 import { isRationalNumberExpression } from '@/lib/helper';
-import { tokensAreOrdered } from '@/lib/calculator/parser/validateTokens';
+import {
+  tokensAreOrdered,
+  validateIrrationalNumberToken,
+  validateOperatorToken,
+  validateRationalNumberToken,
+} from '@/lib/calculator/parser/validateTokens';
 
 type getTokenFunction = {
   [name: string]: (inputString: string) => CalculationToken;
@@ -11,90 +16,80 @@ export const parseCalculationInput = (
   inputString: string
 ): CalculationToken[] => {
   const getTokenFunctions: getTokenFunction = {
-    innerTokenList: getInnerTokenListToken,
     irrationalNumber: getIrrationalNumberToken,
     rationalNumber: getRationalNumberToken,
     operator: getOperatorToken,
   };
-  const tokenStrings: string[] = inputString.split(/[\+,\-,\/,\*]/g);
-  console.log('inputString:', inputString);
-  console.log('tokenStrings:', tokenStrings);
-  if (tokenStrings.includes('')) {
-    const emptyTokenIndex: number = tokenStrings.indexOf('');
-    throw `${tokenStrings[emptyTokenIndex - 1]} should not be followed by ${
-      tokenStrings[emptyTokenIndex + 1]
-    }`;
-  }
-  const tokenList: CalculationToken[] = tokenStrings.map((inputString) => {
-    const tokenType: string = getTokenType(inputString);
-    return getTokenFunctions[tokenType](inputString);
+  const tokenStrings: string[] = inputString
+    .replaceAll('**', '^')
+    .split(/([\+,\-,\/,\*,\^])/g)
+    .filter((tokenString) => tokenString.length > 0);
+  const tokenList: CalculationToken[] = tokenStrings.map((rawTokenString) => {
+    const tokenType: string = getTokenType(rawTokenString);
+    const token = getTokenFunctions[tokenType](rawTokenString);
+    return token;
   });
-  console.log('tokenList:', tokenList);
   if (tokensAreOrdered(tokenList)) {
     return tokenList;
   }
   return [];
 };
 
-const getTokenType = (inputString: string): string => {
-  if (inputString[0] === '(') {
-    return 'innerTokenList';
-  } else if (
+const getTokenType = (rawTokenString: string): string => {
+  if (
     Object.keys(irrationalOperators).some((irrationalOperator) =>
-      inputString.startsWith(irrationalOperator)
+      rawTokenString.startsWith(irrationalOperator)
     )
   ) {
     return 'irrationalNumber';
   } else if (
-    Object.keys(operators).some((operator) => inputString.startsWith(operator))
+    Object.keys(operators).some((operator) => {
+      return rawTokenString.startsWith(operator);
+    })
   ) {
     return 'operator';
-  } else if (isRationalNumberExpression(inputString)) {
+  } else if (isRationalNumberExpression(rawTokenString)) {
     return 'rationalNumber';
   }
-  throw `invalid token: '${inputString}'`;
+  throw `invalid token: '${rawTokenString}'`;
 };
 
-const getInnerTokenListToken = (inputString: string): CalculationToken => {
-  return {
-    rawTokenString: inputString,
-    tokenType: 'innerTokenList',
-    tokens: parseCalculationInput(inputString.slice(1, -1)),
-  };
-};
-
-const getIrrationalNumberToken = (inputString: string): CalculationToken => {
+const getIrrationalNumberToken = (rawTokenString: string): CalculationToken => {
   const operator: string = Object.keys(irrationalOperators).filter((operator) =>
-    inputString.startsWith(operator)
+    rawTokenString.startsWith(operator)
   )[0];
-  const valueString = inputString.slice(operator.length);
+  const valueString = rawTokenString.slice(operator.length);
+  validateIrrationalNumberToken(rawTokenString, valueString);
   return {
-    rawTokenString: inputString,
+    rawTokenString,
     tokenType: 'irrationalNumber',
     irrationalOperator: operator,
     value: getTokenValue(valueString),
   };
 };
 
-const getOperatorToken = (inputString: string): CalculationToken => {
+const getOperatorToken = (rawTokenString: string): CalculationToken => {
+  validateOperatorToken(rawTokenString);
   return {
-    rawTokenString: inputString,
+    rawTokenString,
     tokenType: 'operator',
-    operator: inputString,
+    operator: rawTokenString,
   };
 };
 
-const getRationalNumberToken = (inputString: string): CalculationToken => {
+const getRationalNumberToken = (rawTokenString: string): CalculationToken => {
+  validateRationalNumberToken(rawTokenString);
   return {
-    rawTokenString: inputString,
+    rawTokenString,
     tokenType: 'rationalNumber',
-    value: getTokenValue(inputString),
+    value: getTokenValue(rawTokenString),
   };
 };
 
-const getTokenValue = (inputString: string): number => {
-  if (!isRationalNumberExpression(inputString)) {
-    throw `incorrect expression: ${inputString}`;
+const getTokenValue = (valueString: string): number => {
+  const value = Number(valueString);
+  if (Number.isNaN(value)) {
+    throw `incorrect expression: ${valueString}`;
   }
-  return parseFloat(inputString);
+  return value;
 };

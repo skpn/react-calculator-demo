@@ -4,11 +4,9 @@ import styles from './calculator.module.scss';
 
 import CalculatorKeyboard from './CalculatorKeyboard';
 import CalculatorScreen from './CalculatorScreen';
-import { processTokenList } from '@/lib/calculator/calculations';
-import { parseCalculationInput } from '@/lib/calculator/parser/parser';
-import { CalculationToken } from '@/types/CalculationTokens';
 import { CalculatorHistory } from '@/types/CalculatorHistory';
 import { addHistoryItem } from '@/lib/calculator/history';
+import { calculateExpressionResult } from '@/lib/calculator/calculateExpressionResult';
 
 type calculatorActions = {
   [name: string]: (value: string) => void;
@@ -20,7 +18,8 @@ export default function Calculator() {
     displayedItemsCount: 5,
     displayedItemsOffset: 0,
   });
-  let [keyboardInput, updateKeyboardInput] = useState('');
+  // let [keyboardInput, updateKeyboardInput] = useState('(-1)+3');
+  let [keyboardInput, updateKeyboardInput] = useState('(-1)+3');
 
   const actions: calculatorActions = {
     C: () => updateKeyboardInput(''),
@@ -40,13 +39,10 @@ export default function Calculator() {
       return;
     }
     try {
-      const calculationTokens: CalculationToken[] =
-        parseCalculationInput(keyboardInput);
-      const result: number = processTokenList(calculationTokens);
+      const result: number = calculateExpressionResult(keyboardInput);
       const updatedHistory: CalculatorHistory = addHistoryItem(history, {
         isDisplayed: true,
         rawInput: keyboardInput,
-        calculationTokens,
         result,
       });
       updateHistory(updatedHistory);

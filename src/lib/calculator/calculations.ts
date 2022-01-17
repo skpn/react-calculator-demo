@@ -24,7 +24,7 @@ export const processTokenList = (
 const processPriorityTokens = (
   tokenList: CalculationToken[]
 ): CalculationToken[] => {
-  for (let index = tokenList.length - 1; index > -1; --index) {
+  for (let index = 0; index < tokenList.length; ++index) {
     if (tokenAtIndexHasPriority(tokenList, index)) {
       const priorityToken: CalculationToken = tokenList[index];
       const processedTokensIndexes: number[] = getProcessedTokensIndexes(
@@ -117,8 +117,8 @@ const tokenHasOperatorPriority = (
   token: OperatorToken,
   index: number
 ): boolean => {
-  const firstNeighbor: CalculationToken = tokenList[index - 1];
-  const secondNeighbor: CalculationToken = tokenList[index - 2];
+  const firstNeighbor: CalculationToken = tokenList[index + 1];
+  const secondNeighbor: CalculationToken = tokenList[index + 2];
   if (
     firstNeighbor.tokenType === 'rationalNumber' &&
     (!secondNeighbor ||

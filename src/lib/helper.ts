@@ -27,5 +27,5 @@ export function openGraph({
 }
 
 export const isRationalNumberExpression = (inputString: string): boolean => {
-  return /^\d+(\.\d+){0,}$/.test(inputString);
+  return /^(-|)\d+(\.\d+){0,}$/.test(inputString);
 };
