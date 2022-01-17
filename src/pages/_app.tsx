@@ -1,10 +1,9 @@
 import { AppProps } from 'next/app';
 
 import '@/styles/globals.css';
-// !STARTERCONF This is for demo purposes, remove @/styles/colors.css import immediately
-import '@/styles/colors.css';
 
 import Layout from '@/components/layout/Layout';
+import '@/styles/index.scss';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

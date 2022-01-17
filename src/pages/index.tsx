@@ -3,6 +3,7 @@ import * as React from 'react';
 import Layout from '@/components/layout/Layout';
 import ButtonLink from '@/components/links/ButtonLink';
 import Seo from '@/components/Seo';
+import Calculator from '@/components/calculator/Calculator';
 
 /**
  * SVGR Support
@@ -26,9 +27,10 @@ export default function HomePage() {
         <section className='bg-white'>
           <div className='layout flex flex-col justify-center items-center min-h-screen text-center'>
             {/* <Vercel className='text-5xl' /> */}
-            <ButtonLink className='mt-6' href='/components' variant='light'>
+            {/* <ButtonLink className='mt-6' href='/components' variant='light'>
               See all components
-            </ButtonLink>
+            </ButtonLink> */}
+            <Calculator />
           </div>
         </section>
       </main>

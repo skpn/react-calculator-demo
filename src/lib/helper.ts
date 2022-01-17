@@ -25,3 +25,7 @@ export function openGraph({
     ogTemplateTitle ? `&templateTitle=${ogTemplateTitle}` : ''
   }`;
 }
+
+export const isRationalNumberExpression = (inputString: string): boolean => {
+  return /^\d+(\.\d+){0,}$/.test(inputString);
+};
