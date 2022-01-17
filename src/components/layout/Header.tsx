@@ -7,11 +7,8 @@ type Props = {
 
 export default function Header({ id }: Props) {
   return (
-    <header className='sticky top-0 z-50 bg-white'>
-      <div className='layout flex justify-between items-center h-14'>
-        header
-        {/* <Nav links={links} /> */}
-      </div>
+    <header className='bg-white sticky top-0 z-50'>
+      <div className='flex h-14 items-center justify-between layout'></div>
     </header>
   );
 }
