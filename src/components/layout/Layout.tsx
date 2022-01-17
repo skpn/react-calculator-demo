@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   // Put Header or Footer Here
   return (
     <div className='flex-column'>
-      <Header id={1} />
+      <Header />
       <>{children}</>;
     </div>
   );
