@@ -24,17 +24,12 @@ export const operators: operator = {
   },
 };
 
-export const irrationalOperators: operator = {
-  '√': {
-    priority: 0,
-    func: (a) => Math.sqrt(a),
-  },
-  L: {
-    priority: 0,
-    func: (a) => Math.log10(a),
-  },
-  LN: {
-    priority: 1,
-    func: (a) => Math.log(a),
-  },
+type irrationalOperator = {
+  [name: string]: (a: number) => number;
+};
+
+export const irrationalOperators: irrationalOperator = {
+  '√': (a) => Math.sqrt(a),
+  L: (a) => Math.log10(a),
+  LN: (a) => Math.log(a),
 };

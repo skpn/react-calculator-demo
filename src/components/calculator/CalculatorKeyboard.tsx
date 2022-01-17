@@ -18,7 +18,9 @@ const keys = [
   { text: '8' },
   { text: '9' },
   { text: '/', isOperatorKey: true },
+  { text: '(' },
   { text: '0' },
+  { text: ')' },
   { text: 'C', isActionKey: true },
   { text: '=', isActionKey: true },
 ];

@@ -4,7 +4,7 @@ import styles from './calculator.module.scss';
 
 import CalculatorKeyboard from './CalculatorKeyboard';
 import CalculatorScreen from './CalculatorScreen';
-import { getCalculationResult } from '@/lib/calculator/calculations';
+import { processTokenList } from '@/lib/calculator/calculations';
 import { parseCalculationInput } from '@/lib/calculator/parser/parser';
 import { CalculationToken } from '@/types/CalculationTokens';
 import { CalculatorHistory } from '@/types/CalculatorHistory';
@@ -32,7 +32,6 @@ export default function Calculator() {
       actions[value](keyboardInput);
     } else {
       updateKeyboardInput(keyboardInput + value);
-      console.log('keyboardInput:', keyboardInput);
     }
   };
 
@@ -43,8 +42,7 @@ export default function Calculator() {
     try {
       const calculationTokens: CalculationToken[] =
         parseCalculationInput(keyboardInput);
-      console.log('calculationTokens:', calculationTokens);
-      const result: number = 0; // getCalculationResult(calculationTokens);
+      const result: number = processTokenList(calculationTokens);
       const updatedHistory: CalculatorHistory = addHistoryItem(history, {
         isDisplayed: true,
         rawInput: keyboardInput,
@@ -52,15 +50,15 @@ export default function Calculator() {
         result,
       });
       updateHistory(updatedHistory);
-      updateKeyboardInput(result.toString());
     } catch (error) {
-      console.log('error:', error);
       const updatedHistory: CalculatorHistory = addHistoryItem(history, {
         rawInput: keyboardInput,
         isDisplayed: true,
         error: typeof error === 'string' ? error : `unknown error`,
       });
       updateHistory(updatedHistory);
+    } finally {
+      updateKeyboardInput('');
     }
   };
 
@@ -71,10 +69,13 @@ export default function Calculator() {
         ` flex flex-col p-3 h-4/6 w-2/5 rounded-lg border-x border-y bg-primary-100 border-primary-500`
       }
     >
-      <CalculatorScreen
-        displayedItems={history.items.filter((item) => item.isDisplayed)}
-        newItem={keyboardInput}
-      />
+      <div className={styles.screenDiv}>
+        <CalculatorScreen
+          displayedItems={history.items.filter((item) => item.isDisplayed)}
+          keyboardInput={keyboardInput}
+          activeLineIndex={0}
+        />
+      </div>
       <CalculatorKeyboard keyboardClickHandler={keyboardClickHandler} />
     </div>
   );

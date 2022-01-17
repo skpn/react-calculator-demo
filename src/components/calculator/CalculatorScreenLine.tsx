@@ -1,22 +1,24 @@
 import { ScreenLine } from '@/types/ScreenLines';
+import styles from './calculatorScreenLine.module.scss';
 
 type Props = {
   line: ScreenLine;
-  key?: number;
+  active: boolean;
 };
-export const CalculatorScreenLine = ({ line, key = 0 }: Props) => {
-  console.log('line:', line);
+
+export const CalculatorScreenLine = ({ line, active }: Props) => {
   return (
-    <div></div>
-    // <pre
-    //   key={key || ''}
-    //   className={
-    //     'text-zinc-600 text-xl font-medium whitespace-pre-line ' +
-    //     (line.type === 'error' ? 'text-red-700 ' : '') +
-    //     (line.type === 'result' ? 'text-emerald-700' : '')
-    //   }
-    // >
-    //   {(line.type === 'error' ? 'error: ' : '') + line.text}
-    // </pre>
+    <pre
+      className={
+        'text-zinc-600 text-xl font-medium whitespace-pre-line text-left ' +
+        (line.type === 'error' ? 'text-red-700 ' : '') +
+        (line.type === 'result' ? 'text-emerald-700' : '')
+      }
+    >
+      {(active ? '> ' : '') +
+        (line.type === 'error' ? 'error: ' : '') +
+        line.text}
+      {active ? <span className={styles.blink}>|</span> : ''}
+    </pre>
   );
 };

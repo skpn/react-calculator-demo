@@ -1,3 +1,4 @@
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { CalculatorScreenLine } from '@/components/calculator/CalculatorScreenLine';
 import {
   CalculatorHistoryError,
@@ -9,40 +10,62 @@ import styles from './calculatorScreen.module.scss';
 
 type Props = {
   displayedItems: CalculatorHistoryItem[];
-  newItem: CalculatorHistoryItem;
-  activeLineIndex?: number;
+  keyboardInput: string;
+  activeLineIndex: number;
 };
 
 export default function CalculatorScreen({
   displayedItems,
-  newItem,
+  keyboardInput,
   activeLineIndex,
 }: Props) {
   // TODO: use CalculatorHistoryItem union type, maybe with typeguard ?
   const getLineFromHistoryItem = (item: any): ScreenLine => {
     return {
       type: item.error ? 'error' : 'expression',
-      text: item.error ? item.error : item.rawInput,
+      text: item.error ? item.error : item.result.toFixed(2),
     };
   };
-  console.log('displayedItems:', displayedItems);
+
+  const getLineFromKeyboardInput = (keyboardInput: string): ScreenLine => {
+    return {
+      type: 'expression',
+      text: keyboardInput,
+    };
+  };
   const screenLines: ScreenLine[] = [
     ...displayedItems.map(getLineFromHistoryItem),
-    getLineFromHistoryItem(newItem),
+    getLineFromKeyboardInput(keyboardInput),
   ];
+  useEffect(() => {});
 
   const lineItems = screenLines.map((line, index) => (
-    <CalculatorScreenLine line={line} key={index} />
+    <Fragment key={index}>
+      <CalculatorScreenLine
+        line={line}
+        active={screenLines.length - activeLineIndex - 1 === index}
+      />
+    </Fragment>
   ));
+
+  const ScrollToBottom = () => {
+    const elementRef = useRef<null | HTMLDivElement>(null);
+    useEffect(() => {
+      if (elementRef.current) {
+        elementRef.current.scrollIntoView();
+      }
+    }, [screenLines]);
+    return <div ref={elementRef} />;
+  };
 
   return (
     <div
       className={
-        styles.calculatorScreenBox +
-        ' flex flex-col items-start justify-end bg-white p-3 h-2/6'
+        styles.calculatorScreenBox + ' overflow-y-auto bg-white p-3 h-full'
       }
     >
       {lineItems}
+      <ScrollToBottom />
     </div>
   );
 }

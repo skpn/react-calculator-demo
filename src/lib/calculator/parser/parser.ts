@@ -16,7 +16,9 @@ export const parseCalculationInput = (
     rationalNumber: getRationalNumberToken,
     operator: getOperatorToken,
   };
-  const tokenStrings: string[] = inputString.split(/([\+,\-,\/,\*])/g);
+  const tokenStrings: string[] = inputString.split(/[\+,\-,\/,\*]/g);
+  console.log('inputString:', inputString);
+  console.log('tokenStrings:', tokenStrings);
   if (tokenStrings.includes('')) {
     const emptyTokenIndex: number = tokenStrings.indexOf('');
     throw `${tokenStrings[emptyTokenIndex - 1]} should not be followed by ${
@@ -27,6 +29,7 @@ export const parseCalculationInput = (
     const tokenType: string = getTokenType(inputString);
     return getTokenFunctions[tokenType](inputString);
   });
+  console.log('tokenList:', tokenList);
   if (tokensAreOrdered(tokenList)) {
     return tokenList;
   }
@@ -56,7 +59,7 @@ const getInnerTokenListToken = (inputString: string): CalculationToken => {
   return {
     rawTokenString: inputString,
     tokenType: 'innerTokenList',
-    innerTokenList: parseCalculationInput(inputString.slice(1, -1)),
+    tokens: parseCalculationInput(inputString.slice(1, -1)),
   };
 };
 

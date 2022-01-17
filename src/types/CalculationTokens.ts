@@ -7,7 +7,7 @@ export type OperatorToken = {
 export type InnerTokenListToken = {
   rawTokenString: string;
   tokenType: 'innerTokenList';
-  innerTokenList: CalculationToken[];
+  tokens: CalculationToken[];
 };
 
 export type IrrationalNumberToken = {

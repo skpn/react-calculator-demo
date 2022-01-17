@@ -4,10 +4,6 @@ import Nav from './Nav';
 type Props = {
   id: number;
 };
-const links = [
-  { href: '/', text: 'Home' },
-  { href: '/pokemon', text: 'Pokémons' },
-];
 
 export default function Header({ id }: Props) {
   return (

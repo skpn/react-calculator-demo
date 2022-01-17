@@ -14,31 +14,32 @@ export const addHistoryItem = (
 
 export const changedDisplayedItems = (
   history: CalculatorHistory,
-  displayedItemsCount: number,
-  displayedItemsOffset: number
+  targetDisplayedItemsCount: number,
+  targetDisplayedItemsOffset: number
 ): CalculatorHistory => {
-  history.displayedItemsCount = Math.min(
+  const displayedItemsCount = Math.min(
     history.items.length,
-    displayedItemsCount - 1
+    targetDisplayedItemsCount
   );
 
-  history.displayedItemsOffset = getMaxOffset(
+  const displayedItemsOffset = getMaxOffset(
     history.items.length,
-    history.displayedItemsCount,
-    displayedItemsOffset - 1
+    displayedItemsCount,
+    targetDisplayedItemsOffset
   );
   let displayStartIndex: number, displayEndIndex: number;
-  if (history.displayedItemsOffset) {
+  if (displayedItemsOffset) {
     displayStartIndex =
       0 -
       Math.min(
         history.items.length,
-        history.displayedItemsCount + history.displayedItemsOffset
+        displayedItemsCount + displayedItemsOffset
       );
-    displayEndIndex = 0 - history.displayedItemsOffset;
+    displayEndIndex = history.items.length - displayedItemsOffset;
   } else {
     displayStartIndex =
-      0 - Math.min(history.items.length, history.displayedItemsCount);
+      history.items.length -
+      Math.min(history.items.length, displayedItemsCount);
     displayEndIndex = history.items.length;
   }
   history.items = history.items.map((item, index) => {

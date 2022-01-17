@@ -66,12 +66,15 @@ export const validateToken = (token: CalculationToken): boolean => {
 export const tokensAreOrdered = (tokenList: CalculationToken[]): boolean => {
   if (tokenList[0].tokenType === 'operator') {
     throw `expression should not start with ${tokenList[0].rawTokenString}`;
-  } else if (tokenList[tokenList.length - 1].tokenType === 'operator') {
+  } else if (
+    tokenList.length > 1 &&
+    tokenList[tokenList.length - 1].tokenType === 'operator'
+  ) {
     throw `expression should not end with ${
       tokenList[tokenList.length - 1].rawTokenString
     }`;
   }
-  tokenList.map((token, index) => {
+  tokenList.slice(1).map((token, index) => {
     if (index % 2 === 0 && token.tokenType !== 'operator') {
       throw `${
         tokenList[index - 1].rawTokenString
