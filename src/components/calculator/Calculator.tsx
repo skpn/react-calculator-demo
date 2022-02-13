@@ -13,6 +13,7 @@ type calculatorActions = {
 };
 
 export default function Calculator() {
+  console.log('parent rerender');
   let [history, updateHistory] = useState<CalculatorHistory>({
     items: [],
     displayedItemsCount: 5,

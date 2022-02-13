@@ -30,6 +30,7 @@ const keys = [
 ];
 
 export default function CalculatorKeyboard({ keyboardClickHandler }: Props) {
+  console.log('keyboard render');
   const keyItems = keys.map(({ text, isOperatorKey, isActionKey = false }) => (
     <CalculatorKey
       key={text}
